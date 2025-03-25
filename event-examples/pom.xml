@@ -1,0 +1,32 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.csdn.eval</groupId>
+        <artifactId>eval-event</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <artifactId>event-examples</artifactId>
+    <packaging>pom</packaging>
+    <name>Archetype - event-examples</name>
+    <url>http://maven.apache.org</url>
+    <modules>
+        <module>publisher-example</module>
+        <module>listener-examples</module>
+    </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.csdn.eval</groupId>
+                <artifactId>event-sdk</artifactId>
+                <version>1.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.csdn.eval</groupId>
+                <artifactId>event-core</artifactId>
+                <version>1.0-SNAPSHOT</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+</project>
