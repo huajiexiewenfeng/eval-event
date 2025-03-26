@@ -9,12 +9,14 @@ import org.apache.kafka.clients.producer.ProducerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.util.Properties;
 
 @Component
+@ConditionalOnProperty(value = "event.kafka.publisher.enabled", havingValue = "true")
 public class KafkaEvalEventPublisher<T extends EvalEvent> implements EvalEventPublisher<T> {
 
     private static final Logger log = LoggerFactory.getLogger(KafkaEvalEventPublisher.class);
@@ -36,8 +38,8 @@ public class KafkaEvalEventPublisher<T extends EvalEvent> implements EvalEventPu
             props.put(ProducerConfig.LINGER_MS_CONFIG, kafkaProperties.getProducer().getLingerMs());
             props.put(ProducerConfig.BUFFER_MEMORY_CONFIG, kafkaProperties.getProducer().getBufferMemory());
             props.put(ProducerConfig.MAX_REQUEST_SIZE_CONFIG, kafkaProperties.getProducer().getMaxRequestSize());
-            props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer");
-            props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, "org.springframework.kafka.support.serializer.JsonSerializer");
+            props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, kafkaProperties.getKeySerializer());
+            props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, kafkaProperties.getValueSerializer());
             producer = new KafkaProducer<>(props);
         } catch (Exception e) {
             log.error(">>>> Kafka producer initialization failed", e);

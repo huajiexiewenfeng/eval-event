@@ -1,11 +1,10 @@
 package com.csdn.event.kafka.config;
 
+import org.springframework.boot.context.properties.ConfigurationProperties;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties(prefix = "eval.kafka")
 public class EvalKafkaProperties {
@@ -13,9 +12,125 @@ public class EvalKafkaProperties {
     private List<String> bootstrapServers = new ArrayList<String>(
             Collections.singletonList("localhost:9092"));
 
-    private publisher producer = new publisher();
+    private String keyDeserializer = "org.apache.kafka.common.serialization.StringDeserializer";
 
-    public static class publisher {
+    private String valueDeserializer = "com.csdn.event.kafka.serialization.JsonDeserializer";
+
+    private String keySerializer = "org.apache.kafka.common.serialization.StringSerializer";
+
+    private String valueSerializer = "com.csdn.event.kafka.serialization.JsonSerializer";
+
+    private Producer producer = new Producer();
+
+    private Consumer consumer = new Consumer();
+
+    public static class Consumer {
+
+        private String groupId = "eval-consumer-group";
+
+        private String autoOffsetReset = "earliest";
+
+        private String sessionTimeout = "30000";
+
+        private String maxPollInterval = "60000";
+
+        private String fetchMaxWaitMs = "200";
+
+        private String maxPollRecords = "100";
+
+        private String fetchMaxBytes = "33554432";
+
+        private String partitionFetchMaxBytes = "1048576";
+
+        private String fetchMinBytes = "10485760";
+
+        private String enableAutoCommit = "false";
+
+        public Consumer() {
+        }
+
+        public String getAutoOffsetReset() {
+            return autoOffsetReset;
+        }
+
+        public void setAutoOffsetReset(String autoOffsetReset) {
+            this.autoOffsetReset = autoOffsetReset;
+        }
+
+        public String getFetchMaxBytes() {
+            return fetchMaxBytes;
+        }
+
+        public void setFetchMaxBytes(String fetchMaxBytes) {
+            this.fetchMaxBytes = fetchMaxBytes;
+        }
+
+        public String getFetchMaxWaitMs() {
+            return fetchMaxWaitMs;
+        }
+
+        public void setFetchMaxWaitMs(String fetchMaxWaitMs) {
+            this.fetchMaxWaitMs = fetchMaxWaitMs;
+        }
+
+        public String getFetchMinBytes() {
+            return fetchMinBytes;
+        }
+
+        public void setFetchMinBytes(String fetchMinBytes) {
+            this.fetchMinBytes = fetchMinBytes;
+        }
+
+        public String getGroupId() {
+            return groupId;
+        }
+
+        public void setGroupId(String groupId) {
+            this.groupId = groupId;
+        }
+
+        public String getMaxPollInterval() {
+            return maxPollInterval;
+        }
+
+        public void setMaxPollInterval(String maxPollInterval) {
+            this.maxPollInterval = maxPollInterval;
+        }
+
+        public String getMaxPollRecords() {
+            return maxPollRecords;
+        }
+
+        public void setMaxPollRecords(String maxPollRecords) {
+            this.maxPollRecords = maxPollRecords;
+        }
+
+        public String getPartitionFetchMaxBytes() {
+            return partitionFetchMaxBytes;
+        }
+
+        public void setPartitionFetchMaxBytes(String partitionFetchMaxBytes) {
+            this.partitionFetchMaxBytes = partitionFetchMaxBytes;
+        }
+
+        public String getSessionTimeout() {
+            return sessionTimeout;
+        }
+
+        public void setSessionTimeout(String sessionTimeout) {
+            this.sessionTimeout = sessionTimeout;
+        }
+
+        public String getEnableAutoCommit() {
+            return enableAutoCommit;
+        }
+
+        public void setEnableAutoCommit(String enableAutoCommit) {
+            this.enableAutoCommit = enableAutoCommit;
+        }
+    }
+
+    public static class Producer {
 
         private String acks = "all";
 
@@ -89,11 +204,51 @@ public class EvalKafkaProperties {
         this.bootstrapServers = bootstrapServers;
     }
 
-    public publisher getProducer() {
+    public Producer getProducer() {
         return producer;
     }
 
-    public void setProducer(publisher producer) {
+    public void setProducer(Producer producer) {
         this.producer = producer;
+    }
+
+    public Consumer getConsumer() {
+        return consumer;
+    }
+
+    public void setConsumer(Consumer consumer) {
+        this.consumer = consumer;
+    }
+
+    public String getKeyDeserializer() {
+        return keyDeserializer;
+    }
+
+    public void setKeyDeserializer(String keyDeserializer) {
+        this.keyDeserializer = keyDeserializer;
+    }
+
+    public String getValueDeserializer() {
+        return valueDeserializer;
+    }
+
+    public void setValueDeserializer(String valueDeserializer) {
+        this.valueDeserializer = valueDeserializer;
+    }
+
+    public String getKeySerializer() {
+        return keySerializer;
+    }
+
+    public void setKeySerializer(String keySerializer) {
+        this.keySerializer = keySerializer;
+    }
+
+    public String getValueSerializer() {
+        return valueSerializer;
+    }
+
+    public void setValueSerializer(String valueSerializer) {
+        this.valueSerializer = valueSerializer;
     }
 }

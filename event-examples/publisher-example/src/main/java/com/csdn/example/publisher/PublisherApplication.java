@@ -1,9 +1,7 @@
 package com.csdn.example.publisher;
 
-import com.csdn.event.kafka.publisher.KafkaEvalEventPublisher;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 
 /**
