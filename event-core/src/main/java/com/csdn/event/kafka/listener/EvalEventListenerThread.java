@@ -1,7 +1,7 @@
 package com.csdn.event.kafka.listener;
 
-import com.alibaba.fastjson.JSONObject;
 import com.csdn.event.kafka.model.EvalEventDefinition;
+import com.csdn.event.kafka.utils.ConvertUtil;
 import com.csdn.event.sdk.EvalEvent;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 
 import java.time.Duration;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 
 public class EvalEventListenerThread<T extends EvalEvent> extends Thread {
@@ -36,7 +35,7 @@ public class EvalEventListenerThread<T extends EvalEvent> extends Thread {
         // 1. 创建KafkaConsumer
         KafkaConsumer<String, ?> consumer;
         try {
-            consumer = eventKafkaConsumerFactory.buildKafkaConsumer(evalEventListener);
+            consumer = eventKafkaConsumerFactory.buildKafkaConsumer(evalEventListener.getClass());
             List<String> topicList = new ArrayList<>();
             topicList.add(evalEventDefinition.getTopic());
             consumer.subscribe(topicList);
@@ -77,21 +76,9 @@ public class EvalEventListenerThread<T extends EvalEvent> extends Thread {
         for (ConsumerRecord<String, ?> record : records) {
             Object data = record.value();
             // 这里获取到的 T = linkedHashMap 需要转换成对应的事件类型
-            T event = (T) convertEvent(data, evalEventDefinition.getEventClass());
+            T event = (T) ConvertUtil.convertEvent(data, evalEventDefinition.getEventClass());
             evalEventListener.onEvent(event);
         }
-    }
-
-    private <E> E convertEvent(Object event, Class<E> targetType) {
-        if (event instanceof LinkedHashMap) {
-            return JSONObject.parseObject(
-                    JSONObject.toJSONString(event),
-                    targetType
-            );
-        } else if (targetType.isInstance(event)) {
-            return targetType.cast(event);
-        }
-        throw new IllegalArgumentException("无法转换事件类型: " + event.getClass());
     }
 
 }
